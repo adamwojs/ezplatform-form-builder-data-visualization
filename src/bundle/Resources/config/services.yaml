@@ -8,3 +8,25 @@ services:
         tags:
             - { name: ezplatform.tab, group: location-view }
 
+    AdamWojs\EzPlatformFormBuilderReport\Core\FormSubmissionReportService: ~
+
+    AdamWojs\EzPlatformFormBuilderReport\API\FormSubmissionReportServiceInterface:
+        alias: AdamWojs\EzPlatformFormBuilderReport\Core\FormSubmissionReportService
+
+    AdamWojs\EzPlatformFormBuilderReport\Core\ReportFieldTypeRegistry: ~
+
+    AdamWojs\EzPlatformFormBuilderReport\Core\ReportFieldType\FrequencyReportFieldType:
+        tags:
+            - { name: ezplatform.form_builder.report.field_type, alias: checkbox }
+            - { name: ezplatform.form_builder.report.field_type, alias: checkbox_list }
+            - { name: ezplatform.form_builder.report.field_type, alias: dropdown }
+            - { name: ezplatform.form_builder.report.field_type, alias: radio }
+
+    AdamWojs\EzPlatformFormBuilderReport\Core\ReportFieldType\StatisticsReportFieldType:
+        tags:
+            - { name: ezplatform.form_builder.report.field_type, alias: number }
+
+    AdamWojs\EzPlatformFormBuilderReport\Core\ReportFieldType\UniqueValuesReportFieldType:
+        tags:
+            - { name: ezplatform.form_builder.report.field_type, alias: single_line }
+            - { name: ezplatform.form_builder.report.field_type, alias: multi_line }

@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace AdamWojs\EzPlatformFormBuilderReportBundle\UI\Tab;
 
+use AdamWojs\EzPlatformFormBuilderReport\API\FormSubmissionReportServiceInterface;
 use eZ\Publish\API\Repository\ContentTypeService;
 use EzSystems\EzPlatformAdminUi\Tab\AbstractTab;
 use EzSystems\EzPlatformAdminUi\Tab\ConditionalTabInterface;
@@ -16,6 +17,9 @@ final class ReportTab extends AbstractTab implements OrderedTabInterface, Condit
 {
     private const TAB_IDENTIFIER = 'submissions_report';
 
+    /** @var FormSubmissionReportServiceInterface */
+    private $formSubmissionReportService;
+
     /** @var \eZ\Publish\API\Repository\ContentTypeService */
     private $contentTypeService;
 
@@ -25,6 +29,7 @@ final class ReportTab extends AbstractTab implements OrderedTabInterface, Condit
     public function __construct(
         Environment $twig,
         TranslatorInterface $translator,
+        FormSubmissionReportServiceInterface $formSubmissionReportService,
         ContentTypeService $contentTypeService,
         Type $formBuilderType
     ) {
@@ -32,6 +37,7 @@ final class ReportTab extends AbstractTab implements OrderedTabInterface, Condit
 
         $this->contentTypeService = $contentTypeService;
         $this->formBuilderType = $formBuilderType;
+        $this->formSubmissionReportService = $formSubmissionReportService;
     }
 
     public function evaluate(array $parameters): bool
@@ -64,14 +70,21 @@ final class ReportTab extends AbstractTab implements OrderedTabInterface, Condit
 
     public function getName(): string
     {
-        return $this->translator->trans('tab.name.report', [], /** @Desc("Report") */ 'locationview');
+        return $this->translator->trans(/** @Desc("Report") */ 'tab.name.report', [], 'locationview');
     }
 
     public function renderView(array $parameters): string
     {
+        /** @var \eZ\Publish\API\Repository\Values\Content\Content $content */
+        $content = $parameters['content'];
+
+        $report = $this->formSubmissionReportService->generate($content->contentInfo);
+
         return $this->twig->render(
             '@ezdesign/content/tab/report/tab.html.twig',
-            $parameters
+            array_merge($parameters, [
+                'report' => $report,
+            ])
         );
     }
 }
