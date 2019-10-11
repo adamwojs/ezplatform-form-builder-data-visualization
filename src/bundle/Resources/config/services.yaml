@@ -4,3 +4,7 @@ services:
         autoconfigure: true
         public: false
 
+    AdamWojs\EzPlatformFormBuilderReportBundle\UI\Tab\ReportTab:
+        tags:
+            - { name: ezplatform.tab, group: location-view }
+

@@ -2,15 +2,24 @@
   "name": "adamwojs/ezplatform-form-builder-report",
   "license": "GPL-2.0-only",
   "keywords": [
-    "ezplatform"
+    "ezplatform", "ezplatform-builder"
   ],
   "type": "ezplatform-bundle",
+  "authors": [
+    {
+      "name": "Adam Wójs"
+    }
+  ],
   "minimum-stability": "dev",
   "prefer-stable": true,
+  "repositories": [
+    { "type": "composer", "url": "https://updates.ez.no/ttl" }
+  ],
   "require": {
     "php": "^7.3",
     "ezsystems/ezpublish-kernel": "^8.0@dev",
-    "ezsystems/ezplatform-admin-ui": "^2.0@dev"
+    "ezsystems/ezplatform-admin-ui": "^2.0@dev",
+    "ezsystems/ezplatform-form-builder": "^2.0@dev"
   },
   "require-dev": {
     "phpunit/phpunit": "^8.2",
