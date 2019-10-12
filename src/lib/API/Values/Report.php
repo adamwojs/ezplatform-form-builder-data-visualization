@@ -4,7 +4,11 @@ declare(strict_types=1);
 
 namespace AdamWojs\EzPlatformFormBuilderReport\API\Values;
 
-final class Report
+use ArrayIterator;
+use Iterator;
+use IteratorAggregate;
+
+final class Report implements IteratorAggregate
 {
     /** @var \AdamWojs\EzPlatformFormBuilderReport\API\Values\ReportField[] */
     private $fields;
@@ -20,5 +24,10 @@ final class Report
     public function getFields(): array
     {
         return $this->fields;
+    }
+
+    public function getIterator(): Iterator
+    {
+        return new ArrayIterator($this->fields);
     }
 }

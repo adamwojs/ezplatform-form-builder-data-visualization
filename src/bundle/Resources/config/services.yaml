@@ -30,3 +30,11 @@ services:
         tags:
             - { name: ezplatform.form_builder.report.field_type, alias: single_line }
             - { name: ezplatform.form_builder.report.field_type, alias: multi_line }
+
+    AdamWojs\EzPlatformFormBuilderReport\Core\ReportFieldBlockRenderer:
+        calls:
+            - ['setResources', [ '$form_builder_report_field_templates$' ]]
+
+    AdamWojs\EzPlatformFormBuilderReportBundle\Twig\ReportFieldRenderingExtension:
+        tags:
+            - { name: twig.extension }

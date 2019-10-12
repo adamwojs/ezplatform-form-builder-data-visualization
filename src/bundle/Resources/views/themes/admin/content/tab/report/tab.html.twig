@@ -1,1 +1,34 @@
-<h1>No data.</h1>
+{% for field in report %}
+    <div class="ez-table-header">
+        <div class="ez-table-header__headline">{{ field.getName() }}</div>
+    </div>
+    {{ ez_render_form_submission_report_field(field) }}
+{% endfor %}
+
+<script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+<script type="text/javascript">
+    (function (global, doc, eZ) {
+        const CHART_SELECTOR = '[data-chart]';
+        const COLOR_PALLETE = ['#dc3912', '#109618', '#3366cc', '#ff9900', '#990099', '#000'];
+
+        google.charts.load('current', {'packages': ['corechart']});
+        google.charts.setOnLoadCallback(function () {
+            document.querySelectorAll(CHART_SELECTOR).forEach((el) => {
+                const data = JSON.parse(el.dataset.chartData);
+
+                const dataTable = google.visualization.arrayToDataTable([
+                    ['Answer', 'Count', { role: 'style'}],
+                    ...Object.entries(data).map((row, i) => {
+                        row.push(COLOR_PALLETE[i % COLOR_PALLETE.length]);
+                        return row;
+                    })
+                ]);
+
+                const chart = new google.visualization.ColumnChart(el);
+                chart.draw(dataTable, {
+                    legend: { position: "none" },
+                });
+            });
+        });
+    }) (window, window.document, window.eZ);
+</script>

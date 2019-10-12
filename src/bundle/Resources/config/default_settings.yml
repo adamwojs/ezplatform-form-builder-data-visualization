@@ -1,0 +1,4 @@
+parameters:
+    ezsettings.default.form_builder_report_field_templates:
+        - { template: '@@ezdesign/form_builder/report/report_fields.html.twig', priority: 0 }
+

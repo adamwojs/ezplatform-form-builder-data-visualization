@@ -28,7 +28,7 @@ final class UniqueValuesReportField extends ReportField
      */
     public function update(string $value): self
     {
-        if (in_array($value, $this->values)) {
+        if (!in_array($value, $this->values)) {
             $this->values[] = $value;
         }
 

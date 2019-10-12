@@ -60,7 +60,7 @@ final class ReportTab extends AbstractTab implements OrderedTabInterface, Condit
 
     public function getOrder(): int
     {
-        return 150;
+        return 120;
     }
 
     public function getIdentifier(): string
@@ -70,7 +70,7 @@ final class ReportTab extends AbstractTab implements OrderedTabInterface, Condit
 
     public function getName(): string
     {
-        return $this->translator->trans(/** @Desc("Report") */ 'tab.name.report', [], 'locationview');
+        return 'Results';
     }
 
     public function renderView(array $parameters): string

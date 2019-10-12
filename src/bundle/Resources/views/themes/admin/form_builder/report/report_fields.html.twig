@@ -1,0 +1,44 @@
+{% block ez_form_builder_statistics_report_field %}
+    <div class="ez-scrollable-table-wrapper">
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Average</th>
+                    <th>Count</th>
+                    <th>Minimum</th>
+                    <th>Maximum</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>{{ field.averageValue }}</td>
+                    <td>{{ field.count }}</td>
+                    <td>{{ field.minValue}}</td>
+                    <td>{{ field.maxValue }}</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+{% endblock %}
+
+{% block ez_form_builder_frequency_report_field %}
+    <div class="mb-4">
+        <div data-chart data-chart-data="{{ field.values|json_encode }}"></div>
+    </div>
+{% endblock %}
+
+{% block ez_form_builder_unique_values_report_field %}
+    <div class="ez-scrollable-table-wrapper">
+        <table class="table">
+            <tbody>
+            {% for value in field.values %}
+                {% if value is not empty %}
+                <tr>
+                    <td>{{ value }}</td>
+                </tr>
+                {% endif %}
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+{% endblock %}

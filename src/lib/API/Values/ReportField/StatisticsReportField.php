@@ -35,9 +35,13 @@ final class StatisticsReportField extends ReportField
         $this->max = $max;
     }
 
-    public function getSum(): float
+    public function getAverageValue(): float
     {
-        return $this->sum;
+        if ($this->count > 0) {
+            return $this->sum / $this->count;
+        }
+
+        return PHP_FLOAT_MIN;
     }
 
     public function getCount(): int
@@ -45,12 +49,12 @@ final class StatisticsReportField extends ReportField
         return $this->count;
     }
 
-    public function getMin(): float
+    public function getMinValue(): float
     {
         return $this->min;
     }
 
-    public function getMax(): float
+    public function getMaxValue(): float
     {
         return $this->max;
     }
