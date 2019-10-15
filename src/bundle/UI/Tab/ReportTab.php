@@ -10,7 +10,7 @@ use EzSystems\EzPlatformAdminUi\Tab\AbstractTab;
 use EzSystems\EzPlatformAdminUi\Tab\ConditionalTabInterface;
 use EzSystems\EzPlatformAdminUi\Tab\OrderedTabInterface;
 use EzSystems\EzPlatformFormBuilder\FieldType\Type;
-use Symfony\Contracts\Translation\TranslatorInterface;
+use Symfony\Component\Translation\TranslatorInterface;
 use Twig\Environment;
 
 final class ReportTab extends AbstractTab implements OrderedTabInterface, ConditionalTabInterface
