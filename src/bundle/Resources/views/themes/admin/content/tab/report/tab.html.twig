@@ -37,12 +37,20 @@
         google.charts.load('current', {'packages': ['corechart']});
         google.charts.setOnLoadCallback(function () {
             document.querySelectorAll(CHART_SELECTOR).forEach((el) => {
-                const data = JSON.parse(el.dataset.chartData);
+                const data = Object.entries(JSON.parse(el.dataset.chartData));
+                const total = data.reduce((a, b) => a + b[1], 0);
 
                 const dataTable = google.visualization.arrayToDataTable([
-                    ['Answer', 'Count', { role: 'style'}],
-                    ...Object.entries(data).map((row, i) => {
+                    ['Answer', 'Count', { role: 'style'}, { role: 'annotation' }],
+                    ...data.map((row, i) => {
                         row.push(COLOR_PALLETE[i % COLOR_PALLETE.length]);
+
+                        if (total > 0) {
+                            row.push(((100 * row[1]) / total).toPrecision(3) + '%');
+                        } else {
+                            row.push('');
+                        }
+
                         return row;
                     })
                 ]);
