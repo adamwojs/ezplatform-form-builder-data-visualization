@@ -1,3 +1,20 @@
+{% set current_language = app.request.get('languageCode') ?: content.prioritizedFieldLanguageCode %}
+{% if languages|length > 1  %}
+    <form class="form-inline justify-content-end mb-4">
+        <select class="form-control ez-location-language-change">
+            {% for language in languages %}
+                <option value="{{ path('_ezpublishLocation', {
+                    'locationId': location.id,
+                    'languageCode': language.languageCode,
+                    '_fragment': constant('AdamWojs\\EzPlatformFormBuilderReportBundle\\UI\\Tab\\ReportTab::URI_FRAGMENT'),
+                }) }}"
+                        {% if current_language == language.languageCode %} selected="selected" {% endif %}
+                >{{ language.name }}</option>
+            {% endfor %}
+        </select>
+    </form>
+{% endif %}
+
 {% if not report.isEmpty() %}
     {% for field in report %}
         <div class="ez-table-header">

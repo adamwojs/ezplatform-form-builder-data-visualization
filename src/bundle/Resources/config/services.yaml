@@ -5,6 +5,8 @@ services:
         public: false
 
     AdamWojs\EzPlatformFormBuilderReportBundle\UI\Tab\ReportTab:
+        arguments:
+            $siteAccessLanguages: '$languages$'
         tags:
             - { name: ezplatform.tab, group: location-view }
 
