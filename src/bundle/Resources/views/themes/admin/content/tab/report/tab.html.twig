@@ -1,9 +1,15 @@
-{% for field in report %}
-    <div class="ez-table-header">
-        <div class="ez-table-header__headline">{{ field.getName() }}</div>
-    </div>
-    {{ ez_render_form_submission_report_field(field) }}
-{% endfor %}
+{% if not report.isEmpty() %}
+    {% for field in report %}
+        <div class="ez-table-header">
+            <div class="ez-table-header__headline">{{ field.getName() }}</div>
+        </div>
+        {{ ez_render_form_submission_report_field(field) }}
+    {% endfor %}
+{% else %}
+    <p class="ez-table-no-content">
+        {{ 'tab.submissions.no_submissions'|trans|desc('This form has no submissions.') }}
+    </p>
+{% endif %}
 
 <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
 <script type="text/javascript">

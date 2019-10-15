@@ -26,6 +26,11 @@ final class Report implements IteratorAggregate
         return $this->fields;
     }
 
+    public function isEmpty(): bool
+    {
+        return empty($this->fields);
+    }
+
     public function getIterator(): Iterator
     {
         return new ArrayIterator($this->fields);
