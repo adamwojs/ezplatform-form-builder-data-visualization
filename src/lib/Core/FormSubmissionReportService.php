@@ -7,43 +7,57 @@ namespace AdamWojs\EzPlatformFormBuilderReport\Core;
 use AdamWojs\EzPlatformFormBuilderReport\API\FormSubmissionReportServiceInterface;
 use AdamWojs\EzPlatformFormBuilderReport\API\Values\Report;
 use AdamWojs\EzPlatformFormBuilderReport\API\Values\ReportBuilder;
-use eZ\Publish\API\Repository\Values\Content\ContentInfo;
+use eZ\Publish\API\Repository\Values\Content\Content;
 use EzSystems\EzPlatformFormBuilder\FieldType\Model\FieldValue;
 use EzSystems\EzPlatformFormBuilder\FieldType\Model\FormSubmission;
 use EzSystems\EzPlatformFormBuilder\FormSubmission\FormSubmissionServiceInterface;
+use Iterator;
 
 final class FormSubmissionReportService implements FormSubmissionReportServiceInterface
 {
     /** @var \EzSystems\EzPlatformFormBuilder\FormSubmission\FormSubmissionServiceInterface */
     private $formSubmissionService;
 
+    /** @var \AdamWojs\EzPlatformFormBuilderReport\Core\FormService */
+    private $formService;
+
     /** @var \AdamWojs\EzPlatformFormBuilderReport\Core\ReportFieldTypeRegistry */
     private $reportFieldTypeRegistry;
 
     public function __construct(
         FormSubmissionServiceInterface $formSubmissionService,
+        FormService $formService,
         ReportFieldTypeRegistry $reportFieldTypeRegistry
     ) {
         $this->formSubmissionService = $formSubmissionService;
+        $this->formService = $formService;
         $this->reportFieldTypeRegistry = $reportFieldTypeRegistry;
     }
 
-    public function generate(ContentInfo $content, ?string $languageCode = null): Report
+    public function generate(Content $content, ?string $languageCode = null): Report
     {
         $report = new ReportBuilder();
 
-        $submissions = $this->formSubmissionService->loadByContent($content, $languageCode);
-        foreach ($submissions as $submission) {
-            $this->doUpdateReport($report, $submission);
+        $submissions = $this->formSubmissionService->loadByContent($content->contentInfo, $languageCode);
+        if ($submissions->getTotalCount() > 0) {
+            $iterator = $this->formService->getSummaryFieldsIterator($content);
+
+            foreach ($submissions as $submission) {
+                $this->doUpdateReport($iterator, $report, $submission);
+            }
         }
 
         return $report->build();
     }
 
-    private function doUpdateReport(ReportBuilder $report, FormSubmission $submission): void
+    private function doUpdateReport(Iterator $fields, ReportBuilder $report, FormSubmission $submission): void
     {
-        foreach ($submission->getValues() as $value) {
-            $this->doUpdateReportField($report, $value);
+        foreach ($fields as $field) {
+            foreach ($submission->getValues() as $value) {
+                if ($value->getName() === $field->getName()) {
+                    $this->doUpdateReportField($report, $value);
+                }
+            }
         }
     }
 

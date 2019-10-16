@@ -5,14 +5,13 @@ declare(strict_types=1);
 namespace AdamWojs\EzPlatformFormBuilderReportBundle\UI\Tab;
 
 use AdamWojs\EzPlatformFormBuilderReport\API\FormSubmissionReportServiceInterface;
-use eZ\Publish\API\Repository\ContentTypeService;
+use AdamWojs\EzPlatformFormBuilderReport\Core\FormService;
 use eZ\Publish\API\Repository\LanguageService;
 use eZ\Publish\API\Repository\Values\Content\Content;
 use eZ\Publish\API\Repository\Values\Content\Language;
 use EzSystems\EzPlatformAdminUi\Tab\AbstractTab;
 use EzSystems\EzPlatformAdminUi\Tab\ConditionalTabInterface;
 use EzSystems\EzPlatformAdminUi\Tab\OrderedTabInterface;
-use EzSystems\EzPlatformFormBuilder\FieldType\Type;
 use Symfony\Component\Translation\TranslatorInterface;
 use Twig\Environment;
 
@@ -22,17 +21,14 @@ final class ReportTab extends AbstractTab implements OrderedTabInterface, Condit
 
     private const TAB_IDENTIFIER = 'submission-summary';
 
-    /** @var FormSubmissionReportServiceInterface */
-    private $formSubmissionReportService;
+    /** @var \AdamWojs\EzPlatformFormBuilderReport\Core\FormService */
+    private $formService;
 
-    /** @var \eZ\Publish\API\Repository\ContentTypeService */
-    private $contentTypeService;
+    /** @var \AdamWojs\EzPlatformFormBuilderReport\API\FormSubmissionReportServiceInterface */
+    private $formSubmissionReportService;
 
     /** @var \eZ\Publish\API\Repository\LanguageService */
     private $languageService;
-
-    /** @var \EzSystems\EzPlatformFormBuilder\FieldType\Type */
-    private $formBuilderType;
 
     /** @var array */
     private $siteAccessLanguages;
@@ -41,36 +37,21 @@ final class ReportTab extends AbstractTab implements OrderedTabInterface, Condit
         Environment $twig,
         TranslatorInterface $translator,
         FormSubmissionReportServiceInterface $formSubmissionReportService,
-        ContentTypeService $contentTypeService,
+        FormService $formService,
         LanguageService $languageService,
-        Type $formBuilderType,
         array $siteAccessLanguages
     ) {
         parent::__construct($twig, $translator);
 
         $this->formSubmissionReportService = $formSubmissionReportService;
-        $this->contentTypeService = $contentTypeService;
+        $this->formService = $formService;
         $this->languageService = $languageService;
-        $this->formBuilderType = $formBuilderType;
         $this->siteAccessLanguages = $siteAccessLanguages;
     }
 
     public function evaluate(array $parameters): bool
     {
-        $location = $parameters['location'];
-
-        $contentType = $this->contentTypeService->loadContentType(
-            $location->getContentInfo()->contentTypeId
-        );
-
-        // TODO: Move to specification
-        foreach ($contentType->getFieldDefinitions() as $fieldDefinition) {
-            if ($this->formBuilderType->getFieldTypeIdentifier() === $fieldDefinition->fieldTypeIdentifier) {
-                return true;
-            }
-        }
-
-        return false;
+        return $this->formService->isForm($parameters['location']->getContentInfo());
     }
 
     public function getOrder(): int
@@ -94,7 +75,7 @@ final class ReportTab extends AbstractTab implements OrderedTabInterface, Condit
         $content = $parameters['content'];
 
         $report = $this->formSubmissionReportService->generate(
-            $content->contentInfo,
+            $content,
             $content->prioritizedFieldLanguageCode
         );
 

@@ -10,6 +10,8 @@ services:
         tags:
             - { name: ezplatform.tab, group: location-view }
 
+    AdamWojs\EzPlatformFormBuilderReport\Core\FormService: ~
+
     AdamWojs\EzPlatformFormBuilderReport\Core\FormSubmissionReportService: ~
 
     AdamWojs\EzPlatformFormBuilderReport\API\FormSubmissionReportServiceInterface:
@@ -36,6 +38,8 @@ services:
     AdamWojs\EzPlatformFormBuilderReport\Core\ReportFieldBlockRenderer:
         calls:
             - ['setResources', [ '$form_builder_report_field_templates$' ]]
+
+    AdamWojs\EzPlatformFormBuilderReport\Core\EventSubscriber\FormFieldDefinitionSubscriber: ~
 
     AdamWojs\EzPlatformFormBuilderReportBundle\Twig\ReportFieldRenderingExtension:
         tags:
